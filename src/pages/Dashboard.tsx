@@ -1,46 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { fetchJSON } from '../api/client';
+import React, { useEffect, useState } from "react";
+import { fetchJSON } from "../api/client";
 
-interface AnalyticsData {
-  users: number;
-  completions: number;
-  date: string;
-}
+type TokenStatus = {
+  notion?: string;
+  supabase?: string;
+  mailgun?: string;
+  [key: string]: string | undefined;
+};
 
 export const Dashboard: React.FC = () => {
-  const [data, setData] = useState<AnalyticsData[] | null>(null);
+  const [data, setData] = useState<TokenStatus | null>(null);
 
   useEffect(() => {
     (async () => {
-      const result = await fetchJSON('/api/analytics');
+      const result = await fetchJSON("/api/tokens/status");
       setData(result);
     })();
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: "2rem" }}>
       <h1>Dashboard</h1>
-      <p>Welcome to the Notalyn MVP Dashboard. Live stats from backend below:</p>
-      {!data && <p>Loading analytics...</p>}
+      <p>Live token status from backend:</p>
+      {!data && <p>Loading…</p>}
       {data && (
-        <table style={{ borderCollapse: 'collapse', marginTop: '1rem', width: '100%' }}>
-          <thead>
-            <tr style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>
-              <th>Date</th>
-              <th>Users</th>
-              <th>Completions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, i) => (
-              <tr key={i} style={{ borderBottom: '1px solid #eee' }}>
-                <td>{row.date}</td>
-                <td>{row.users}</td>
-                <td>{row.completions}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <pre
+          style={{
+            background: "#f5f5f5",
+            padding: "1rem",
+            borderRadius: "8px",
+            marginTop: "1rem",
+          }}
+        >
+          {JSON.stringify(data, null, 2)}
+        </pre>
       )}
     </div>
   );
