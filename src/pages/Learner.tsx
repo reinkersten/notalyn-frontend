@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 export const Learner: React.FC = () => (
   <div style={{ padding: '2rem' }}>
     <h1>Learner</h1>
